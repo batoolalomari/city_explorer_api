@@ -55,7 +55,7 @@ function handelWeather(req,res)
 function Weather(forecast,time)
 {
     this.forecast=forecast;
-    this.time= time;
+    this.time= new Date(time).toDateString() ;
     
 }
 
