@@ -52,10 +52,10 @@ function handelWeather(req,res)
     }
 }
 
-function Weather(forecast,time)
+function Weather(forecast,timedate)
 {
     this.forecast=forecast;
-    this.time= new Date(time).toDateString() ;
+    this.timedate= new Date(timedate).toDateString() ;
     
 }
 
