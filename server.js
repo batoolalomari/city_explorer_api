@@ -1,6 +1,7 @@
 let express= require('express');
 let cors=require('cors');
 let app=express();
+//let superagent=require('superagent');
 require('dotenv').config();
 app.use(cors());
 
@@ -13,6 +14,11 @@ function handelLocation(req,res)
     try{
     let city=req.query.city;
     let jsonData=require('./data/location.json');
+   /*superagent.get('url api from the documentation and passed the token int he key and search city',(data)=>{
+
+    console.log(data);
+
+    });*/
     let object=jsonData[0];
     let location=new Location(city,object.display_name,object.lat,object.lon);
 
@@ -37,7 +43,12 @@ function handelWeather(req,res)
 {
     try{
     let jsonData=require('./data/weather.json');
-    let object=jsonData.data;
+   // let object=jsonData.data;
+   let object=jsonData.map((mapData)=>{
+
+    return mapData.data;
+
+   });
     let data=[];
 
     for (let index = 0; index < jsonData.length; index++) {
