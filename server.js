@@ -1,7 +1,7 @@
 let express= require('express');
 let cors=require('cors');
 let app=express();
-//let superagent=require('superagent');
+let superagent=require('superagent');
 require('dotenv').config();
 app.use(cors());
 
@@ -13,16 +13,17 @@ function handelLocation(req,res)
 {
     try{
     let city=req.query.city;
-    let jsonData=require('./data/location.json');
-   /*superagent.get('url api from the documentation and passed the token int he key and search city',(data)=>{
+    //let jsonData=require('./data/location.json');
+    let key='pk.74aeb760be786d944c09a41102505213';
+   superagent.get(`GET https://eu1.locationiq.com/v1/search.php?key=${key}q=${city}&format=json`).then((data)=>{
 
-    console.log(data);
+    res.send(data);
 
-    });*/
-    let object=jsonData[0];
+    });
+    /*let object=jsonData[0];
     let location=new Location(city,object.display_name,object.lat,object.lon);
 
-    res.status(200).json(location);
+    res.status(200).json(location);*/
     }
     catch(message){
     res.status(500).send("Sorry, something went wrong..."); 
@@ -51,7 +52,7 @@ function handelWeather(req,res)
    });
     let data=[];
 
-    for (let index = 0; index < jsonData.length; index++) {
+    for (let index = 0; index < object.length; index++) {
          data=new Weather(object[index].description,object[index].timedate);
 
     }
