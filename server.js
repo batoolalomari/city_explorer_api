@@ -11,38 +11,41 @@ const PORT = process.env.PORT;
 const DATABASE_URL = process.env.DATABASE_URL;
 let client = new pg.Client(DATABASE_URL);
 
-app.get('/location', handelLocation);
 app.get('/location', checkLocation);
+//app.get('/location', handelLocation);
 
-function handleWrongPaths(req, res) {
-    res.status(404).send('page not found');
-}
 
-function checkLocation() {
-    let serchQuery = req.query.search_query;
-    let statement = `SELECT * FROM locations WHERE search_query=${serchQuery} RETURNING *;`;
 
-    let city = req.query.city;
+
+function checkLocation(req ,res) {
+    let serchQuery = req.query.city;
+    let statement = `SELECT * FROM locations WHERE search_query=$1 ;`;
+    let sQ=[serchQuery];
+   
+    //let city = req.query.city;
     let key = process.env.GEOCODE_API_KEY;
 
-    let lato = req.query.latitude;
+    /*let lato = req.query.latitude;
     let long = req.query.longitude;
-    let formated = req.query.formatted_query;
+    let formated = req.query.formatted_query;*/
 
-    client.query(statement, values).then(record => {
+    client.query(statement, sQ).then(record => {
         if (record.rowCount > 0)
+        {
+        console.log(record.rowCount);
             res.send(record.rows);
+        }
         else {
-            superagent.get(`https://eu1.locationiq.com/v1/search.php?key=${key}&q=${city}&format=json`).
+            superagent.get(`https://eu1.locationiq.com/v1/search.php?key=${key}&q=${serchQuery}&format=json`).
                 then((data) => {
                     let object = data.body[0];
-                    let location = new Location(city, object.display_name, object.lat, object.lon);
+                    let location = new Location(serchQuery, object.display_name, object.lat, object.lon);
                     let statement2 = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *;`;
 
-                    let values = [city, formated, lato, long];
+                    let values = [location.search_query, location.formatted_query, location.latitude, location.longitude];
                     client.query(statement2, values).then(insertedRecord => {
-                        res.send(insertedRecord.rows);
-                        res.status(200).json(location);
+                        res.send(insertedRecord.rows[0]);
+                       // res.status(200).json(location);
                     }).catch(err => {
                         res.send(`sorry .. an error occured while inserting ... ${err}`);
                     });
@@ -204,8 +207,9 @@ app.get('/weather', handelWeather);
             }).catch(() => {
                 console.log("an error occured");
             });
-       
+    
 
-
-
+            function handleWrongPaths(req, res) {
+                res.status(404).send('page not found');
+            }
 
