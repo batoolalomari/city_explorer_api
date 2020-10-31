@@ -5,14 +5,14 @@ const weather={};
 
 
 module.exports=weather;
-weather.getWeather=function(res,serchQuery){
+weather.getWeather=function(res,serchQuery2){
     let key=process.env.WEATHER_API_KEY
     let dataArr;
-       return superagent.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${serchQuery}&key=${key}`).
+       return superagent.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${serchQuery2}&key=${key}`).
             then((Wdata) => {
                 let object = Wdata.body.data;
-                dataArr = object.map((Wdata) => {
-                    return new Weather(Wdata.weather.description, Wdata.datetime);
+                dataArr = object.map((wdata) => {
+                    return new Weather(wdata.weather.description, wdata.datetime);
                 });
                 return dataArr;
             }).catch(() => {
@@ -20,7 +20,7 @@ weather.getWeather=function(res,serchQuery){
             })
 }
 
-function Weather(forecast, time) {
+function Weather(forecast,time) {
     this.forecast = forecast;
     this.time = new Date(time).toDateString();
 

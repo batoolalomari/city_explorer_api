@@ -20,10 +20,10 @@ yelp.getYelpFromAPI = function (res,req, serchQuery2) {
     };
 
     let yelpArr = [];
-    return superagent.get(`https://api.yelp.com/v3/businesses/search?location=${serchQuery2}`).query(queryParams).set('Authorization', `Bearer ${key}`).
+    return superagent.get(`https://api.yelp.com/v3/businesses/search`).query(queryParams).set('Authorization', `Bearer ${key}`).
         then((data) => {
             let object = data.body.businesses;
-            movieArr = object.map((yelpsData) => {
+            yelpArr = object.map((yelpsData) => {
                 //let yelps = new Yelp(yelpsData.name, yelpsData.image_url, yelpsData.price, yelpsData.rating, yelpsData.url);
                 return new Yelp(yelpsData) ;
             });
