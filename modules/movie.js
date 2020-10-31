@@ -8,7 +8,7 @@ const movie={};
 
 movie.getMovieFromAPI=function(serchQuery2, res) {
     let key=process.env.MOVIE_API_KEY;
-     let movieArr=[];
+     let movieArr;
     return superagent.get(`https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${serchQuery2}&include_adult=false`).
         then((data) => {
             let object = data.body.results;

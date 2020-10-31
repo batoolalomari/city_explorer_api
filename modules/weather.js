@@ -4,7 +4,6 @@ let superagent = require('superagent');
 const weather={};
 
 
-module.exports=weather;
 weather.getWeather=function(res,serchQuery2){
     let key=process.env.WEATHER_API_KEY
     let dataArr;
@@ -25,4 +24,6 @@ function Weather(forecast,time) {
     this.time = new Date(time).toDateString();
 
 }
+
+module.exports=weather;
 

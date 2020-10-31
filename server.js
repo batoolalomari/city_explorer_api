@@ -2,15 +2,14 @@
 
 let express = require('express');
 let cors = require('cors');
-let superagent = require('superagent');
-
 let app = express();
+
+
 require('dotenv').config();
 app.use(cors());
 
+
 const PORT = process.env.PORT;
-
-
 const client = require('./modules/client.js');
 const location = require('./modules/location.js');
 const weather = require('./modules/weather.js');
@@ -18,12 +17,9 @@ const trail = require('./modules/trails.js');
 const movie = require('./modules/movie.js');
 const yelp = require('./modules/yelp.js');
 
+
+
 app.get('/location', checkLocation);
-//app.get('/location', handelLocation);
-
-
-
-
 function checkLocation(req, res) {
     let serchQuery = req.query.city;
     location.checkLoction(serchQuery, res).then(record => {
@@ -36,10 +32,12 @@ function checkLocation(req, res) {
 
 
 }
-//const client = require('./moudules/client.js');
+
+
+
 app.get('/movies', checkMovie);
 function checkMovie(req, res) {
-    let serchQuery = req.query.city;
+    let serchQuery = req.query.search_query;
     movie.getMovieFromAPI(serchQuery, res).then(data => {
         res.json(data);
 
@@ -50,9 +48,10 @@ function checkMovie(req, res) {
 
 }
 
+
 app.get('/yelp', checkYelp);
 function checkYelp(req, res) {
-    let serchQuery2 = req.query.city;
+    let serchQuery2 = req.query.search_query;
     yelp.getYelpFromAPI(res, req, serchQuery2).then(data => {
         res.json(data);
 
@@ -65,9 +64,8 @@ function checkYelp(req, res) {
 
 
 app.get('/weather', handelWeather);
-
 function handelWeather(req, res) {
-    let serchQuery2 = req.query.city;
+    let serchQuery2 = req.query.search_query;
     weather.getWeather(res, serchQuery2).then(data => {
         res.json(data);
 
@@ -81,9 +79,8 @@ function handelWeather(req, res) {
 
 
 app.get('/trails', handelTrails);
-
 function handelTrails(req, res) {
-    let city = req.query.city;
+    let city = req.query.search_query;
     trail.getTrails(city, req, res).then(data => {
         res.json(data);
 
@@ -92,6 +89,11 @@ function handelTrails(req, res) {
 
     })
 
+}
+
+app.get('*', handleWrongPaths);
+function handleWrongPaths(req, res) {
+    res.status(404).send('page not found');
 }
 
 
@@ -107,10 +109,7 @@ client.connect().then(() => {
     console.log("an error occured");
 });
 
-app.get('*', handleWrongPaths);
-function handleWrongPaths(req, res) {
-    res.status(404).send('page not found');
-}
+
 
 
 
